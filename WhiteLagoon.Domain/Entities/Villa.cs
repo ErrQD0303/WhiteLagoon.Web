@@ -9,7 +9,7 @@ namespace WhiteLagoon.Domain.Entities
 {
     public class Villa
     {
-        public int Id { get; set; }
+        public int Id { get; set; } //The Id key will be made the new primary key of Villa
         [MaxLength(50)]
         public required string Name { get; set; }
         public string? Description { get; set; }

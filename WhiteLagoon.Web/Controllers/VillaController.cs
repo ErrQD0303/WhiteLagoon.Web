@@ -38,7 +38,7 @@ namespace WhiteLagoon.Web.Controllers
                 _db.Villas.Add(obj); //write a script to create the Villa object in the database
                 _db.SaveChanges(); //Go into the database and create the Villa object
                 TempData["success"] = "The villa has been created successfully.";
-                return RedirectToAction("Index"); //Redirect to the Index action in the same controller
+                return RedirectToAction(nameof(Index)); //Redirect to the Index action in the same controller
                                                   //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
             }
             TempData["error"] = "The villa could not be created.";
@@ -66,7 +66,7 @@ namespace WhiteLagoon.Web.Controllers
                 _db.Villas.Update(obj); //write a script to update the Villa object in the database
                 _db.SaveChanges(); //Go into the database and update the Villa object
                 TempData["success"] = "The villa has been updated successfully.";
-                return RedirectToAction("Index"); //Redirect to the Index action in the same controller
+                return RedirectToAction(nameof(Index)); //Redirect to the Index action in the same controller
                                                   //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
             }
             TempData["error"] = "The villa could not be updated.";
