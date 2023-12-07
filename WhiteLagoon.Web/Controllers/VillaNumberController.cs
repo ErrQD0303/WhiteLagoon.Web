@@ -23,6 +23,8 @@ namespace WhiteLagoon.Web.Controllers
             return View(villas);
         }
 
+        [Route("/VillaNumber/Create", 
+            Name = "create1")]
         public IActionResult Create()
         {
             VillaNumberVM villaNumberVM = new()
