@@ -17,6 +17,11 @@ namespace WhiteLagoon.Web.Controllers
             _db = db;
         }
 
+        public void OnGetProfile(int profileId)
+        {
+            ViewData["ProfileId"] = profileId;
+        }
+
         public IActionResult Index()
         {
             var villas = _db.VillaNumbers.Include(u => u.Villa).ToList();
