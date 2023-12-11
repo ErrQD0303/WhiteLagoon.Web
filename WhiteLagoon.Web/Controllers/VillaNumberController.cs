@@ -28,8 +28,8 @@ namespace WhiteLagoon.Web.Controllers
             return View(villas);
         }
 
-        [Route("/VillaNumber/Create", 
-            Name = "create1")]
+        [Route("/VillaNumber/Create",
+            Name = "create1")] //Route just for testing
         public IActionResult Create()
         {
             VillaNumberVM villaNumberVM = new()
@@ -44,6 +44,8 @@ namespace WhiteLagoon.Web.Controllers
             return View(villaNumberVM);
         }
 
+        [Route("/VillaNumber/Create",
+            Name = "create2")] //Route just for testing
         [HttpPost] //Atrribute to identifies an action to support HTTP Post method
         public IActionResult Create(VillaNumberVM obj)
         {
