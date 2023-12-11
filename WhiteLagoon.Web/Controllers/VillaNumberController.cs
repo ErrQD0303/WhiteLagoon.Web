@@ -30,7 +30,7 @@ namespace WhiteLagoon.Web.Controllers
         }
 
         [Route("/VillaNumber/Create",
-            Name = "create1")] //Route just for testing
+            Name = "create1")] //Route just for testing //Note from Chrome
         public IActionResult Create()
         {
             VillaNumberVM villaNumberVM = new()
