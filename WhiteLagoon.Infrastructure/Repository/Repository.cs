@@ -41,7 +41,7 @@ namespace WhiteLagoon.Infrastructure.Repository
             {
                 foreach (var includeProp in includeProperties
                     .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)) {
-                    query.Include(includeProp);
+                    query = query.Include(includeProp);
                 }
             }
             return query.FirstOrDefault();
@@ -49,7 +49,7 @@ namespace WhiteLagoon.Infrastructure.Repository
 
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
-            IQueryable<T> query = _db.Set<T>();
+            IQueryable<T> query = dbSet;
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -59,10 +59,15 @@ namespace WhiteLagoon.Infrastructure.Repository
                 foreach (var includeProp in includeProperties
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(includeProp);
+                    query = query.Include(includeProp);
                 }
             }
             return query.ToList();
+        }
+
+        public bool Any(Expression<Func<T, bool>> filter)
+        {
+            return dbSet.Any(filter);
         }
     }
 }
