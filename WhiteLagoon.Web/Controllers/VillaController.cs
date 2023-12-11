@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Domain.Entities;
 using WhiteLagoon.Infrastructure.Data;
 
@@ -7,16 +8,16 @@ namespace WhiteLagoon.Web.Controllers
 {
     public class VillaController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public VillaController(ApplicationDbContext db)
+        public VillaController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var villas = _db.Villas.ToList();
+            var villas = _unitOfWork.Villa.GetAll();
             return View(villas);
         }
 
@@ -35,8 +36,8 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Villas.Add(obj); //write a script to create the Villa object in the database
-                _db.SaveChanges(); //Go into the database and create the Villa object
+                _unitOfWork.Villa.Add(obj); //write a script to create the Villa object in the database
+                _unitOfWork.Save(); //Go into the database and create the Villa object
                 TempData["success"] = "The villa has been created successfully.";
                 return RedirectToAction(nameof(Index)); //Redirect to the Index action in the same controller
                                                   //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
@@ -47,7 +48,7 @@ namespace WhiteLagoon.Web.Controllers
 
         public IActionResult Update(int villaId)
         {
-            Villa? obj = _db.Villas.FirstOrDefault(u => u.Id == villaId);
+            Villa? obj = _unitOfWork.Villa.Get(u => u.Id == villaId);
             /*Villa? obj = _db.Villas.Find(villaId);
             var VillaList = _db.Villas.Where(u => u.Price > 50 && u.Occupancy > 0);*/
             if (obj == null)
@@ -63,8 +64,8 @@ namespace WhiteLagoon.Web.Controllers
         {
             if (ModelState.IsValid && obj.Id > 0)
             {
-                _db.Villas.Update(obj); //write a script to update the Villa object in the database
-                _db.SaveChanges(); //Go into the database and update the Villa object
+                _unitOfWork.Villa.Update(obj); //write a script to update the Villa object in the database
+                _unitOfWork.Save(); //Go into the database and update the Villa object
                 TempData["success"] = "The villa has been updated successfully.";
                 return RedirectToAction(nameof(Index)); //Redirect to the Index action in the same controller
                                                   //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
@@ -75,7 +76,7 @@ namespace WhiteLagoon.Web.Controllers
 
         public IActionResult Delete(int villaId)
         {
-            Villa? obj = _db.Villas.FirstOrDefault(u => u.Id == villaId);
+            Villa? obj = _unitOfWork.Villa.Get(u => u.Id == villaId);
             /*Villa? obj = _db.Villas.Find(villaId);
             var VillaList = _db.Villas.Where(u => u.Price > 50 && u.Occupancy > 0);*/
             if (obj == null)
@@ -89,11 +90,11 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost] //Atrribute to identifies an action to support HTTP Post method
         public IActionResult Delete(Villa obj)
         {
-            Villa? objFromDb = _db.Villas.FirstOrDefault(u => u.Id == obj.Id);
+            Villa? objFromDb = _unitOfWork.Villa.Get(u => u.Id == obj.Id);
             if (objFromDb is not null)
             {
-                _db.Villas.Remove(objFromDb); //write a script to delete the Villa object in the database
-                _db.SaveChanges(); //Go into the database and delete the Villa object
+                _unitOfWork.Villa.Remove(objFromDb); //write a script to delete the Villa object in the database
+                _unitOfWork.Save(); //Go into the database and delete the Villa object
                 TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction("Index"); //Redirect to the Index action in the same controller
                                                   //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
