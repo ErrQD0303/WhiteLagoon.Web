@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WhiteLagoon.Domain\WhiteLagoon.Domain.csproj" />
-  </ItemGroup>
-
 </Project>
