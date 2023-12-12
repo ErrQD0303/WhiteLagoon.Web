@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,9 @@ namespace WhiteLagoon.Domain.Entities
         public int Sqft { get; set; }
         public int Occupancy { get; set; }
         [Display(Name = "Image Url")]
+        [NotMapped] //Tell the compiler not add this property to the database
+        public IFormFile? Image { get; set; }
+        [Display(Name="Image URL")]
         public string? ImageUrl { get; set; }
         public DateTime? Created_Date { get; set; }
         public DateTime? Updated_Date { get; set; }

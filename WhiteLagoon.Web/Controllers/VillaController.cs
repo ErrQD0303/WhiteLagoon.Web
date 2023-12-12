@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Domain.Entities;
@@ -9,10 +10,12 @@ namespace WhiteLagoon.Web.Controllers
     public class VillaController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvirontment;
 
-        public VillaController(IUnitOfWork unitOfWork)
+        public VillaController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvirontment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -36,11 +39,25 @@ namespace WhiteLagoon.Web.Controllers
             }
             if (ModelState.IsValid)
             {
+                if (obj.Image != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
+                    string imagePath = Path.Combine(_webHostEnvirontment.WebRootPath, @"images\VillaImage");
+
+                    using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
+                    obj.Image.CopyTo(fileStream);
+
+                    obj.ImageUrl = @"\images\VillaImage\" + fileName;
+                }
+                else
+                {
+                    obj.ImageUrl = "https://placehold.co/600x400";
+                }
                 _unitOfWork.Villa.Add(obj); //write a script to create the Villa object in the database
                 _unitOfWork.Save(); //Go into the database and create the Villa object
                 TempData["success"] = "The villa has been created successfully.";
                 return RedirectToAction(nameof(Index)); //Redirect to the Index action in the same controller
-                                                  //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
+                                                        //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
             }
             TempData["error"] = "The villa could not be created.";
             return View();
@@ -64,11 +81,31 @@ namespace WhiteLagoon.Web.Controllers
         {
             if (ModelState.IsValid && obj.Id > 0)
             {
+                if (obj.Image != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(obj.Image.FileName);
+                    string imagePath = Path.Combine(_webHostEnvirontment.WebRootPath, @"images\VillaImage");
+
+                    if (!string.IsNullOrEmpty(obj.ImageUrl))
+                    {
+                        var oldImagePath = Path.Combine(_webHostEnvirontment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
+                        
+                        if (System.IO.File.Exists(oldImagePath)) {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    using var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create);
+                    obj.Image.CopyTo(fileStream);
+
+                    obj.ImageUrl = @"\images\VillaImage\" + fileName;
+                }
+
                 _unitOfWork.Villa.Update(obj); //write a script to update the Villa object in the database
                 _unitOfWork.Save(); //Go into the database and update the Villa object
                 TempData["success"] = "The villa has been updated successfully.";
                 return RedirectToAction(nameof(Index)); //Redirect to the Index action in the same controller
-                                                  //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
+                                                        //return RedirectToAction("Index", "Villa"); //Redirecto the Index action the Villa Controller
             }
             TempData["error"] = "The villa could not be updated.";
             return View();
@@ -93,6 +130,15 @@ namespace WhiteLagoon.Web.Controllers
             Villa? objFromDb = _unitOfWork.Villa.Get(u => u.Id == obj.Id);
             if (objFromDb is not null)
             {
+                if (!string.IsNullOrEmpty(objFromDb.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_webHostEnvirontment.WebRootPath, objFromDb.ImageUrl.TrimStart('\\'));
+
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
                 _unitOfWork.Villa.Remove(objFromDb); //write a script to delete the Villa object in the database
                 _unitOfWork.Save(); //Go into the database and delete the Villa object
                 TempData["success"] = "The villa has been deleted successfully.";
