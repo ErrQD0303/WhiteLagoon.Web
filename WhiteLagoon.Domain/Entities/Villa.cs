@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,9 +24,12 @@ namespace WhiteLagoon.Domain.Entities
         [Display(Name = "Image Url")]
         [NotMapped] //Tell the compiler not add this property to the database
         public IFormFile? Image { get; set; }
-        [Display(Name="Image URL")]
+        [Display(Name = "Image URL")]
         public string? ImageUrl { get; set; }
         public DateTime? Created_Date { get; set; }
         public DateTime? Updated_Date { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<Amenity> VillaAmenity { get; set; }
     }
 }
