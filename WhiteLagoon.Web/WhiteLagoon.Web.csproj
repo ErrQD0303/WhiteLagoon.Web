@@ -23,4 +23,15 @@
     <Folder Include="wwwroot\images\VillaImage\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\js\jquery.unobtrusive-ajax.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\js\jquery.unobtrusive-ajax.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
