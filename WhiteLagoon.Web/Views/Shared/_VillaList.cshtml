@@ -29,8 +29,12 @@
                                 {
                                     if (villa.IsAvailable)
                                     {
-                                        <a class="btn btn-success form-control btn-block">
-                                            Book
+                                        <a asp-controller="Booking" asp-action="FinalizeBooking"
+                                           asp-route-checkInDate="@Model.CheckInDate.ToString("d", System.Globalization.CultureInfo.CurrentUICulture)"
+                                           asp-route-villaID="@villa.Id"
+                                           asp-route-nights="@Model.Nights"
+                                           class="btn btn-success form-control btn-block">
+                                           Book
                                         </a>
                                     }
                                     else
@@ -49,7 +53,7 @@
                                 <span class="text-warning float-end font-weight-bold pt-1" style="font-size:25px;">
                                     USA
                                     <span style="border-bottom:1px solid #ff6a00">
-                                        @villa.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-US")) @* //c for Currency Format *@
+                                        @villa.Price.ToString("c", System.Globalization.CultureInfo.CurrentUICulture) @* //c for Currency Format *@
                                     </span>
                                 </span>
                             </div>

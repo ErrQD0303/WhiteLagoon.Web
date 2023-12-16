@@ -20,6 +20,8 @@ namespace WhiteLagoon.Infrastructure.Data
         public DbSet<VillaNumber> VillaNumbers { get; set; }
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+
 /*        Realises the ApplicationUser object and instead of creating a new set of
         properties for the IdentityUser, it will use the
         ApplicationUser object (because the ApplicationUser inherits

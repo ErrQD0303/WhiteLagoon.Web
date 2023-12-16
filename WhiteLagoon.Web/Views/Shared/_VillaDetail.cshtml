@@ -35,7 +35,7 @@
                 <p class="text-warning font-weight-bold pt-1">
                     USD
                     <span style=" #ff6a00">
-                        @Model.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-US")) / night
+                        @Model.Price.ToString("c", System.Globalization.CultureInfo.CurrentUICulture) / night
                     </span>
                 </p>
             </span>

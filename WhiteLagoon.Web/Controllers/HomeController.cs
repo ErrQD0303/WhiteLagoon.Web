@@ -27,14 +27,7 @@ namespace WhiteLagoon.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(HomeVM homeVM)
-        {
-            homeVM.VillaList = _unitOfWork.Villa.GetAll(includeProperties: "VillaAmenity");
-
-            return View(homeVM);
-        }
-
-        public IActionResult GetVillasByDate(int night, DateOnly checkInDate)
+        public IActionResult GetVillasByDate(int nights, DateOnly checkInDate)
         {
             var villaList = _unitOfWork.Villa.GetAll(includeProperties: "VillaAmenity");
             foreach (var villa in villaList)
@@ -48,7 +41,7 @@ namespace WhiteLagoon.Web.Controllers
             {
                 CheckInDate = checkInDate,
                 VillaList = villaList,
-                Nights = night
+                Nights = nights
             };
 
             return PartialView("_VillaList", homeVM); //PartialView is used to return
