@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using WhiteLagoon.Application.Common.Interfaces;
 using WhiteLagoon.Domain.Entities;
 using WhiteLagoon.Infrastructure.Data;
@@ -37,6 +38,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); //Adding Dependency Injection
 var app = builder.Build();
+//Get the Stripe API Key from the appsettings.json file
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
