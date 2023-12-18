@@ -33,7 +33,7 @@
                 <input asp-for="UserId" hidden />
                 @* Need to pass these values to the controller althought
                 they've been displayed in the view already' *@
-                <input asp-for="CheckInDate" hidden />
+                <input asp-for="@Model.CheckInDate" hidden />
                 <input asp-for="CheckOutDate" hidden />
                 <input asp-for="Nights" hidden />
                 <div class="row pt-1 mb-3 " style="border-radius:20px; ">
@@ -56,23 +56,24 @@
                 </div>
                 <div class="form-group pt-2">
                     <label asp-for="CheckInDate" class="text-warning">Check in Date</label>
-                    <input asp-for="CheckInDate" value="@Model.CheckInDate" disabled class="form-control" />
+                    <input asp-for="CheckInDate" disabled class="form-control" />
                 </div>
                 <div class="form-group pt-2">
                     <label asp-for="CheckOutDate" class="text-warning">Check out Date</label>
                     <input asp-for="CheckOutDate" disabled class="form-control" />
                 </div>
                 <div class="form-group pt-2">
-                    <label asp-for ="Nights" class="text-warning">No. of nights</label>
-                    <input asp-for ="Nights" disabled class="form-control" />
+                    <label asp-for="Nights" class="text-warning">No. of nights</label>
+                    <input asp-for="Nights" disabled class="form-control" />
                 </div>
                 <div class="form-group pt-2 pt-md-4">
                     @if (Model.Villa.IsAvailable)
                     {
                         <button asp-for="TotalCost" type="submit" class="btn btn-success form-control">Looks Good! Checkout Now</button>
                     }
-                    else {
-                    <input asp-for ="TotalCost" class="btn btn-danger disabled form-control" value="Sold Out" />
+                    else
+                    {
+                        <input asp-for="TotalCost" class="btn btn-danger disabled form-control" value="Sold Out" />
                     }
                 </div>
             </form>
