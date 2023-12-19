@@ -49,16 +49,22 @@ namespace WhiteLagoon.Web.Controllers
                 //Check if the login was successful
                 if (result.Succeeded)
                 {
-                    //Check if the RedirectURL property is null or empty
-                    if (string.IsNullOrEmpty(loginVM.RedirectURL))
-                    {
-                        //Redirect to the home page
-                        return RedirectToAction("Index", "Home");
+                    var user = await _userManager.FindByEmailAsync(loginVM.Email);
+                    if (await _userManager.IsInRoleAsync(user, SD.Role_Admin)) {
+                        return RedirectToAction("Index", "Dashboard");
                     }
-                    else
-                    {
-                        //Redirect to the page that is stored inside RedirectURL property
-                        return LocalRedirect(loginVM.RedirectURL);
+                    else {
+                        //Check if the RedirectURL property is null or empty
+                        if (string.IsNullOrEmpty(loginVM.RedirectURL))
+                        {
+                            //Redirect to the home page
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            //Redirect to the page that is stored inside RedirectURL property
+                            return LocalRedirect(loginVM.RedirectURL);
+                        }
                     }
                 }
                 else
