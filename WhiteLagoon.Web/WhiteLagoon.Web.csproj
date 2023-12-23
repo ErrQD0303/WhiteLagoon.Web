@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.bundle.js.map" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.bundle.min.js.map" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.esm.js" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.esm.js.map" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.esm.min.js.map" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.js" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
+    <Content Remove="C:\Users\ADMIN\.nuget\packages\bootstrap.sass\5.3.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bootstrap.sass" Version="5.3.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
