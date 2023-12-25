@@ -95,14 +95,6 @@ namespace WhiteLagoon.Web.Controllers
             //Check if the returnURL is null or empty
             //If it is null or empty, assign the home page URL to it
             returnURL ??= Url.Content("~/");
-            //Check if the roles exist and create them if not
-            if (!_roleManager.RoleExistsAsync("Admin").GetAwaiter().GetResult())
-            {
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).Wait();
-                /*await _roleManager.CreateAsync(new IdentityRole("Admin"));
-                //this is equivalent to above*/
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).Wait();
-            }
 
             RegisterVM registerVM = new()
             {

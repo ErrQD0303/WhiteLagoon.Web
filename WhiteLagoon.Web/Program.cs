@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
+using Syncfusion.Licensing;
 using WhiteLagoon.Application.Common.Interfaces;
+using WhiteLagoon.Application.Common.Utility.Implementation;
+using WhiteLagoon.Application.Common.Utility.Interface;
 using WhiteLagoon.Domain.Entities;
 using WhiteLagoon.Infrastructure.Data;
 using WhiteLagoon.Infrastructure.Repository;
@@ -37,10 +40,18 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); //Adding Dependency Injection
+builder.Services.AddScoped<IDashBoardService, DashBoardService>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+builder.Services.AddScoped<IVillaService, VillaService>();
+builder.Services.AddScoped<IVillaNumberService, VillaNumberService>();
+builder.Services.AddScoped<IAmenityService, AmenityService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+
 var app = builder.Build();
 //Get the Stripe API Key from the appsettings.json file
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
+SyncfusionLicenseProvider.RegisterLicense(builder.Configuration.GetSection("Synfusion:Licensekey").Get<string>());
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -56,6 +67,7 @@ app.UseStaticFiles();
 
 //Note: The UseRouting method is used to route the request to the appropriate endpoint
 app.UseRouting();
+SeedDatabase();
 
 //Note: The UseAuthentication method is used to authenticate the user
 app.UseAuthorization();
@@ -66,3 +78,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+//Initialize the user roles and the database
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}

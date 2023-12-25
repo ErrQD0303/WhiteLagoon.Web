@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WhiteLagoon.Application.Common.Interfaces;
+using WhiteLagoon.Application.Common.Utility.Interface;
 using WhiteLagoon.Domain.Entities;
 using WhiteLagoon.Infrastructure.Data;
 using WhiteLagoon.Web.ViewModels;
@@ -11,11 +12,13 @@ namespace WhiteLagoon.Web.Controllers
 {
     public class VillaNumberController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IVillaService _villaService;
+        private readonly IVillaNumberService _villaNumberService;
 
-        public VillaNumberController(IUnitOfWork unitOfWork)
+        public VillaNumberController(IVillaService villaService, IVillaNumberService villaNumberService)
         {
-            _unitOfWork = unitOfWork;
+            _villaService = villaService;
+            _villaNumberService = villaNumberService;
         }
 
         public void OnGetProfile(int profileId)
@@ -25,7 +28,7 @@ namespace WhiteLagoon.Web.Controllers
 
         public IActionResult Index()
         {
-            var villas = _unitOfWork.VillaNumber.GetAll(includeProperties: "Villa");
+            var villas = _villaNumberService.GetAllVillaNumbers();
             return View(villas);
         }
 
@@ -35,7 +38,7 @@ namespace WhiteLagoon.Web.Controllers
         {
             VillaNumberVM villaNumberVM = new()
             {
-                VillaList = _unitOfWork.Villa.GetAll().ToList().Select(u => new SelectListItem
+                VillaList = _villaService.GetAllVillas().ToList().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
@@ -52,17 +55,16 @@ namespace WhiteLagoon.Web.Controllers
         {
             /*//Solution 1
             ModelState.Remove("Villa"); //Remove the validation for the "Villa" column of VillaNumber*/
-            bool roomNumberExists = _unitOfWork.VillaNumber.Any(u => u.Villa_Number == obj.VillaNumber.Villa_Number);
+            bool roomNumberExists = _villaNumberService.CheckVillaNumberExists(obj.VillaNumber.Villa_Number);
             if (ModelState.IsValid && !roomNumberExists)
             {
-                _unitOfWork.VillaNumber.Add(obj.VillaNumber);
-                _unitOfWork.Save();
+                _villaNumberService.CreateVillaNumber(obj.VillaNumber);
                 TempData["success"] = "The villa Number has been created successfully.";
                 return RedirectToAction(nameof(Index)); //Redirect to the Index action in the same controller
                                                   //return RedirectToAction("Index", "VillaNumber"); //Redirecto the Index action the Villa Controller
             }
             TempData["error"] = "The room has already existed";
-            obj.VillaList = _unitOfWork.Villa.GetAll().ToList().Select(u => new SelectListItem
+            obj.VillaList = _villaService.GetAllVillas().ToList().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id.ToString()
@@ -74,12 +76,12 @@ namespace WhiteLagoon.Web.Controllers
         {
             VillaNumberVM villaNumberVM = new()
             {
-                VillaList = _unitOfWork.Villa.GetAll().ToList().Select(u => new SelectListItem
+                VillaList = _villaService.GetAllVillas().ToList().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
                 }),
-                VillaNumber = _unitOfWork.VillaNumber.Get(u => u.Villa_Number == villaNumberId)
+                VillaNumber = _villaNumberService.GetVillaNumberById(villaNumberId)
             };
             if (villaNumberVM.VillaNumber == null)
             {
@@ -94,14 +96,13 @@ namespace WhiteLagoon.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.VillaNumber.Update(villaNumberVM.VillaNumber);
-                _unitOfWork.Save();
+                _villaNumberService.UpdateVillaNumber(villaNumberVM.VillaNumber);
                 TempData["success"] = "The villa has been updated successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
             //populate after villaNumberVM because VillaList doesn't return
-            villaNumberVM.VillaList = _unitOfWork.Villa.GetAll().ToList().Select(u => new SelectListItem
+            villaNumberVM.VillaList = _villaService.GetAllVillas().ToList().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id.ToString()
@@ -113,12 +114,12 @@ namespace WhiteLagoon.Web.Controllers
         {
             VillaNumberVM villaNumberVM = new()
             {
-                VillaList = _unitOfWork.Villa.GetAll().ToList().Select(u => new SelectListItem
+                VillaList = _villaService.GetAllVillas().ToList().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
                 }),
-                VillaNumber = _unitOfWork.VillaNumber.Get(u => u.Villa_Number == villaNumberId)
+                VillaNumber = _villaNumberService.GetVillaNumberById(villaNumberId)
             };
             if (villaNumberVM.VillaNumber == null)
             {
@@ -131,11 +132,9 @@ namespace WhiteLagoon.Web.Controllers
         [HttpPost] //Atrribute to identifies an action to support HTTP Post method
         public IActionResult Delete(VillaNumberVM villaNumberVM)
         {
-            VillaNumber objFromDb = _unitOfWork.VillaNumber.Get(u => u.Villa_Number == villaNumberVM.VillaNumber.Villa_Number);
-            if (objFromDb is not null)
+            bool isVillaDeleted = _villaNumberService.DeleteVillaNumber(villaNumberVM.VillaNumber.Villa_Number);
+            if (isVillaDeleted)
             {
-                _unitOfWork.VillaNumber.Remove(objFromDb);
-                _unitOfWork.Save();
                 TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WhiteLagoon.Domain.Entities;
+using WhiteLagoon.Web.ViewModels;
 
 namespace WhiteLagoon.Application.Common.Utility
 {
@@ -54,6 +56,36 @@ namespace WhiteLagoon.Application.Common.Utility
             }
 
             return finalAvailableRoomForAllNights;
+        }
+
+        public static RadialBarChartDto GetRadialChartDataModel(int totalCount, double currentMonthCount, double prevMonthCount)
+        {
+            RadialBarChartDto radialBarChartVM = new();
+
+            int increaseDecreaseRatio = 100;
+
+            if (prevMonthCount != 0)
+            {
+                increaseDecreaseRatio = Convert.ToInt32((currentMonthCount - prevMonthCount) / prevMonthCount * 100);
+            }
+
+            radialBarChartVM.TotalCount = totalCount;
+            radialBarChartVM.CountInCurrentMonth = Convert.ToInt32(currentMonthCount);
+            radialBarChartVM.HasRatioIncreased = currentMonthCount > prevMonthCount;
+            radialBarChartVM.Series = new int[] { increaseDecreaseRatio };
+            return radialBarChartVM;
+        }
+
+        public static void SetCulture(HttpRequest request)
+        {
+            string? userCulture = request.GetTypedHeaders().AcceptLanguage?.OrderByDescending(x => x.Quality ?? 1.0)
+                .Select(x => x.Value).FirstOrDefault().ToString();
+            if (!String.IsNullOrEmpty(userCulture))
+                System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo(userCulture);
+            else
+            {
+                System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+            }
         }
     }
 }
